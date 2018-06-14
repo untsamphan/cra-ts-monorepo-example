@@ -1,0 +1,9 @@
+{
+  "name": "mymain",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "private": true
+}
