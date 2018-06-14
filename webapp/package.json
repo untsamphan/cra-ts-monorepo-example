@@ -57,6 +57,10 @@
     "typescript": "^2.9.1"
   },
   "jest": {
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/../packages"
+    ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
     ],
@@ -64,8 +68,8 @@
       "<rootDir>/config/polyfills.js"
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
-      "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"
+      "**/src/**/__tests__/**/*.(j|t)s?(x)",
+      "**/src/**/?(*.)(spec|test).(j|t)s?(x)"
     ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
@@ -81,6 +85,11 @@
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
+    "moduleDirectories": [
+      "node_modules",
+      "../node_modules",
+      "../packages"
+    ],
     "moduleFileExtensions": [
       "web.ts",
       "ts",
