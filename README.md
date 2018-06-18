@@ -10,11 +10,52 @@
 
 ## Tools
 
-1. create-react-app (will eject to config webpack/jest to achive #3 goal)
+1. create-react-app (will eject to config webpack/jest to achieve #3 goal)
 
 1. react-scripts-ts
 
 1. yarn workspace
+
+## Project structure
+
+```json
+/                  <-- project root
+  - packages/      <-- local packages root
+    - mymain/      <-- a local packages
+      - build/     <-- tsc outDir
+      - src/       <-- TypeScript source file
+      - index.ts   <-- tsc import will use this if no build/
+          export * from './src';
+      - package.json
+        {
+          "name": "mymain", "version": "0.1.0", "license": "UNLICENSED", "private": true
+          "main": "build/index.js",       <-- for webpack import
+          "types": "build/index.d.ts",    <-- tsc import will use this if there's build/
+        }
+      - tsconfig.json
+
+  - webapp/        <-- a CRA-ts project, use mymain
+    - src/
+    - typescript.json
+      {
+        "extends": "../tsconfig-base.json",
+        "compilerOptions": {
+          "baseUrl": "../../packages",    <-- allow import from 'mymain'
+          "outDir": "build/dist"
+        }
+      }
+    - package.json
+
+  - tsconfig-base.json  <-- common tsconfig
+  - package.json
+    {
+      "name": "cra-ts-monorepo-example", "private": true,
+      "workspaces": [ "webapp", "packages/*" ]
+    }
+
+
+
+```
 
 ## Steps
 
@@ -28,7 +69,7 @@
 
 1. Make the CRA app use the new local packages [commit](https://github.com/untsamphan/cra-ts-monorepo-example/commit/20ecb7ab2add90030d69701a7a62d4f58e7db7c1). Now the CRA app will tsc compile correctly (because we have index.ts at mymain root). But when `yarn start` it'll fail in browser because mymain isn't built. To fix this we can tsc in mymain to build the package and the app will run successfully. However, when we `go to definition` to a symbol in mymain, it'll goto a .d.ts.
 
-1. To achive goal #3, we configure tsconfig.json `baseUrl` to directly reference local packages. Since webpack won't bundle code outside `webapp/src`, and jest won't find the packages, we have to eject to configure them. [commit](https://github.com/untsamphan/cra-ts-monorepo-example/commit/00980f8b5dc6e8dc116ba600cfc7f61d996a049c)
+1. To achieve goal #3, we configure tsconfig.json `baseUrl` to directly reference local packages. Since webpack won't bundle code outside `webapp/src`, and jest won't find the packages, we have to eject to configure them. [commit](https://github.com/untsamphan/cra-ts-monorepo-example/commit/00980f8b5dc6e8dc116ba600cfc7f61d996a049c)
 
 1. Simple webpack config hack to allow it to bundle code outside `webpack/src`. This to achieve goal #3. [commit](https://github.com/untsamphan/cra-ts-monorepo-example/commit/284fa7eff600a7a2b1bd287db848bddff7de346a). Don't forget to delete `build` in local packages, because otherwise everyone will use `build/index.*` (per NPM spec) instead of `index.ts` at the local package root (a TS-specific behavior).
 
